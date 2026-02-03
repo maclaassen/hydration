@@ -1,7 +1,7 @@
 ---
 title: "Results consumption and hydration status"
-author: "Almudena Claassen"
-date: "December 2025"
+#author: "anonymous"
+date: "January 2026"
 output: 
   html_document: 
     toc: yes
@@ -16,15 +16,15 @@ options(width = 80)
 # make sure the data is in the same folder as Rm  arkdown document
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-library(markdown)
-library(foreign)
-library(plyr)
+#library(markdown)
+#library(foreign)
+#library(plyr)
 library(dplyr)
 library(tidyr)
 library(janitor)
 library(psych)
-library(lme4)
-library(lmerTest)
+#library(lme4)
+#library(lmerTest)
 library(ggplot2)
 library(readr)
 library(forcats)
@@ -43,14 +43,6 @@ library(patchwork)
 library(ragg)
 library(PupillometryR)
 library(performance)
-#library(rcompanion)
-
-# library(conflicted)
-# conflict_prefer("summarise", "dplyr")
-# conflict_prefer("filter", "dplyr")
-# conflict_prefer("mutate", "dplyr")
-# conflict_prefer("arrange", "dplyr")
-# conflicts_prefer(psych::describe)
 ```
 
 ```{r}
@@ -217,12 +209,12 @@ clean_data <- raw_data %>%
 
 ## Calculate BMI
 
-Having downloaded from Qualtrics selecting numeric values has messed up height and weight measures so downloading these separately
+Having downloaded from Qualtrics selecting numeric values has messed up height and weight measures so downloaded these in a separate CSV
 
 ```{r}
 data_BMI <- "Representative_BMI.csv"
-headers = read_csv(data_BMI, col_names = FALSE, n_max = 1) %>%
-  as.character()
+  headers = read_csv(data_BMI, col_names = FALSE, n_max = 1) %>%
+    as.character()
 data_BMI = read_csv(data_BMI, skip = 3, col_names = FALSE)
 colnames(data_BMI)= headers
 
@@ -346,7 +338,7 @@ clean_data %>%
 
 # none but I missed one morning coffee in normal cup as I clicked forward instead of moving down the chart, sorry!
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_3OlvWZC2fQ9FyPf")
 
 clean_data <- clean_data %>% 
@@ -372,7 +364,7 @@ clean_data %>%
 
 #Was only given option for three drinks in afternoon. For statistical purposes, I had five pints of Guinness.
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_2SGeFtQOWmXJBr9")
 
 clean_data <- clean_data %>% 
@@ -380,7 +372,7 @@ clean_data <- clean_data %>%
 
 #My partner and I have been not flushing our toilet when we urinate to save water, so it's hard to say how dark my urine was yesterday. However, I was aware that I wasn't drinking as much as I usually do (4 pints of water) yesterday so I think it's safe to assume my urine was a little dark.
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_2sZ3XmcAU52hC3e")
 
 clean_data <- clean_data %>% 
@@ -390,7 +382,7 @@ clean_data <- clean_data %>%
 
 # this participants has inputted water from container 3 multiple of 5 (in morning and afternoon) so here I decrease the amount
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_2VIQcPNh1VZZ2Dc")
 
 clean_data <- clean_data %>% 
@@ -399,7 +391,7 @@ clean_data <- clean_data %>%
 
 #Note - I was unable to accurately report on the drinks I had before breakfast and at lunch. I reported it as juice from a carton. But actually it was mostly water with a small amount add (about 20% of the glass), i.e. DILUTED juice. Sorry !
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_2Vwrg6DWHDAAbKF")
 
 clean_data <- clean_data %>% 
@@ -408,7 +400,7 @@ clean_data <- clean_data %>%
 
 #I went back to the lunch part of the survey, to add soup because I originally forgot it. I chose a mug as the container but I had a bowl - and a later question asked about soup. I hope I didn't do this incorrectly.
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_2ZCFnbnskNdnj77")
 
 # removing the soup record
@@ -422,7 +414,7 @@ clean_data <- clean_data %>%
 
 #Ketogenic diet
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_3nc4FGOALU4uW25")
 
 clean_data <- clean_data %>% 
@@ -432,7 +424,7 @@ clean_data <- clean_data %>%
 
 #The first drink i entered was actually for the milk i drank from the bowl after my cereal but there was no option to convey that
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_3stgi4JPeW34m3A")
 
 # removing the milk record (they added it later in the cereal questions)
@@ -445,7 +437,7 @@ clean_data <- clean_data %>%
 
 #I drink a 500ml cup of tea but there was only an option for max 250ml
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_PIo4xg4JRRAnbMd")
 
 clean_data <- clean_data %>% 
@@ -460,7 +452,7 @@ clean_data <- clean_data %>%
 
 #in the exercise section I put walking time as 3, I meant 3 hours not 3 minutes so should have put 180. Apologies.
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_Uiuhn4doWD7llYZ")
 
 clean_data <- clean_data %>% 
@@ -468,7 +460,7 @@ clean_data <- clean_data %>%
 
 #When asked about milk, I answered 'Yes' I drank oat milk / drink, with breakfast.
 
-pp_test <- clean_data %>%
+clean_data %>%
   filter(response_id == "R_wTRXzZMRjOX8dsl")
 
 clean_data <- clean_data %>% 
@@ -841,11 +833,11 @@ clean_data <- stats::reshape(clean_data,
 
 # remove if drink_type, drink_code, container_code, amount is 0
 # select those who have 0 values
-test_no <- clean_data %>% 
+clean_data %>% 
   filter(drink_type == 0 & drink_code == 0 & container_code == 0 & amount == 0)
 
 # deal with some missing values that were identified later
-test_missing <- clean_data %>% 
+clean_data %>% 
   filter(drink_type == 2 & drink_code == 0)
 
 clean_data <- clean_data %>% 
@@ -858,7 +850,7 @@ clean_data <- clean_data %>%
 
 # check if missing var on one of these values drink_type, drink_code, container_code, amount is 0
 # check 0 values
-test_missing <- clean_data %>% 
+clean_data %>% 
   filter(drink_type == 0 | drink_code == 0 | container_code == 0 | amount == 0)
 ```
 
@@ -1063,7 +1055,7 @@ clean_data <- clean_data %>%
        mutate(drink_code_name = case_when(response_id == "R_3NwHVBI4XscNFsG" & drink_type_name == "soft/flavoured beverages" & drink_code_name == "tap water" ~ "carbonated soft drink", TRUE ~ drink_code_name)) %>% 
    mutate(drink_code_name = case_when(response_id == "R_XRn3RZGo9n2x5Jf" & drink_type_name == "soft/flavoured beverages" & drink_code_name == "tap water" ~ "other sweet drink", TRUE ~ drink_code_name)) #has filled in 1 (tap water) for each drink category 
 
-pp_test <- clean_data %>% 
+clean_data %>% 
   filter(response_id == "R_2VEetDzvVxxhndG")
 
 clean_data <- clean_data %>% 
@@ -1280,6 +1272,8 @@ b <- test %>%
 # no non-matches so good
 anti_join(a, b, by="pp")
 
+rm(test, a, b)
+
 # SES
 clean_data <- clean_data %>% 
   mutate(education_cat = dplyr::recode(education, "1" = "No formal qualifications",
@@ -1493,7 +1487,7 @@ clean_data <- clean_data %>%
 range(clean_data$age)
 which(clean_data$age==465) #465 impossible age
 
-pp_test <- clean_data %>% 
+clean_data %>% 
   filter(response_id == clean_data[366,]$response_id) 
 
 clean_data <- clean_data %>% 
@@ -1699,6 +1693,7 @@ clean_data <- clean_data %>%
 clean_data <- clean_data %>% 
   dplyr::select(-c(household_size_1_1, 
                    household_size_2_1, 
+                   prolific_pid,
                    evening_no_drink,
                    urine_color,
                    void_other,
@@ -1722,8 +1717,8 @@ clean_data_open <- clean_data %>%
   select(c(response_id, color_drink, color_health, color_own, chart_prior, urine_color_health)) %>% 
   distinct() 
 
-save(clean_data_open, file = "clean_data_open.Rdata")
-write.csv(clean_data_open,"clean_data_open.csv", row.names = FALSE)
+#save(clean_data_open, file = "clean_data_open.Rdata")
+#write.csv(clean_data_open,"clean_data_open.csv", row.names = FALSE)
 ```
 
 ## Create wide format
@@ -1776,43 +1771,10 @@ plot
 plot <- ggplot(clean_data_wide, aes(education_cat, fill = education_split)) +
   geom_bar()
 plot
-
-# descriptives table only for low vs. high education
-tbl_descr_1 <- clean_data_wide %>% 
-  group_by(education_split) %>% 
-  dplyr::select(education_split, age_cat, gender, income_split, urine_color_split, total_fluid_extra_l, total_water_l, total_ssb_l, #FV_portions, 
-         BMI, PA_day) %>%
-  #filter(income_split %ni% NA_real_) %>% 
-  tbl_summary(by = "education_split",
-              statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)"),
-              label = 
-                c(age_cat ~ "Age", 
-                  gender ~ "Gender", 
-                  income_split ~ "Income",
-                  urine_color_split ~ "Hydration status (urine colour)",
-                  total_fluid_extra_l ~ "Total fluid intake (L)",
-                  total_water_l ~ "Total water intake (L)",
-                  total_ssb_l ~ "Total SSB intake (L)",
-                  PA_day ~ "Moderate-intense physical activity (min)")) %>% 
-  add_overall()
-
-tbl_descr_1
-
-# Convert to gt object
-gt_tbl_1 <- as_gt(tbl_descr)
-
-# Write to Word
-gtsave(gt_tbl, "tbl_descr_ex1_1.docx")
 ```
-
 
 ## Fluid intake
 ```{r}
-# total fluid intake
-plot <- geom_plot(clean_data_wide, total_fluid_extra, "total fluid")
-plot
-
 # select colors
 pal <- drygatebrewer::drygate_palette("TakeMeTotheRiver")
 
@@ -1833,9 +1795,6 @@ ggplot(subset(clean_data_wide, gender %in% c("male", "female")), aes(x=total_flu
         panel.border = element_blank(),
         panel.background = element_blank(),
         axis.line = element_line(color = 'black'),
-        #axis.ticks.y=element_blank(),
-        #axis.ticks.x=element_blank(), 
-        #legend.position="none",
         legend.title = element_blank(),
         legend.text = element_text(size=12),
         axis.text.x=element_text(size=12, colour = "black"),
@@ -1864,11 +1823,7 @@ clean_data_wide %>%
   select(total_fluid_extra) %>% 
   dplyr::count(total_fluid_extra >= 2500) %>%
   dplyr::mutate(percent = n/sum(n))
-```
 
-## Stacked bar graph (intake per drink type)
-
-```{r}
 mean(clean_data_wide$total_fluid_extra, na.rm = TRUE) #mean total fluid
 mean(clean_data_long$amount_ml, na.rm = TRUE) #mean amount per drinking instance
 mean(clean_data_wide$total_water, na.rm = TRUE) #mean water per sample
@@ -1885,9 +1840,6 @@ total_means <- clean_data_wide %>%
 # transform to long format
 total_means <- gather(total_means, drink_type_name, amount_ml, total_water:total_alcohol)
 
-pal <- drygate_palette(10, name = "TakeMeTotheRiver", type = "continuous")
-pal <- pal[-c(6, 8, 10)] #remove white and in-between color
-
 total_means <- total_means %>% 
   mutate(drink_type_name = factor(drink_type_name, levels = 
                                     c("total_other", 
@@ -1897,35 +1849,6 @@ total_means <- total_means %>%
                                       "total_ssb", 
                                       "total_hot",
                                       "total_water")))
-
-# mean per drink type compared to total mean
-figure2 <- ggplot(total_means,
-       aes(x = gender,
-           y = amount_ml,
-           fill = drink_type_name)) + 
-  geom_bar(stat = "identity") +
-  scale_fill_manual(values = pal, labels = c("total_water" = "water", "total_ssb" = "SSBs", "total_other" = "other", "total_milk" = "milk drinks",
-                                  "total_hot" = "hot drinks", 
-                                  "total_diet" = "diet beverages",
-                                 "total_alcohol" = "alcohol")) + 
-  scale_x_discrete(labels = c("Female", "Male")) +
-  
-  theme(
-    panel.border = element_rect(colour = "black", fill = NA, size = 1), #to create a border
-    panel.background = element_blank(),
-    panel.grid.major = element_blank(),
-    axis.text.y=element_text(size=12, color="black"),
-    axis.title.x=element_blank(),
-    axis.text.x=element_text(size=12, color='black', face = "bold"),
-    axis.title.y=element_text(size=12, color='black', face = "bold"),
-    axis.ticks.y=element_blank(),
-    axis.ticks.x=element_blank(),
-    legend.title=element_text(size=12, color='black', face = "bold"),
-    legend.text=element_text(size=12)) + ylab("Mean consumption (ml)") + labs(fill = "Drink Type")
-  #labs(title = "Beverage intake per gender and drink type (mean ml)", #subtitle = "Average consumption (ml)") 
-figure2
-
-#ggsave(figure2, file= "figure2.png", width = 10, height = 8)
 
 # popularity of beverages
 total_pop <- clean_data_wide %>%
@@ -1983,8 +1906,6 @@ figure2_extra <- ggplot(total_pop_gender,
     legend.text=element_text(size=12)) + ylab("% consuming") + labs(fill = "Gender")
 figure2_extra
 
-#ggsave(figure2_extra, file= "figure2_extra.png", width = 10, height = 8)
-
 total_means <- total_means %>% 
   mutate(drink_type_name = factor(drink_type_name, levels = 
                                     c("total_other", 
@@ -1994,14 +1915,12 @@ total_means <- total_means %>%
                                       "total_ssb", 
                                       "total_hot",
                                       "total_water")))
-```
 
-## Fig. 2B
-```{r}
+# Fig. 3B
 pal <- drygate_palette(10, name = "TakeMeTotheRiver", type = "continuous")
 pal <- pal[-c(6, 8, 10)] #remove white and in-between color
 
-figure_B <- ggplot(total_means,
+figure_3B <- ggplot(total_means,
                    aes(x = gender,
                        y = amount_ml,
                        fill = drink_type_name)) +
@@ -2035,10 +1954,10 @@ figure_B <- ggplot(total_means,
     legend.text = element_text(size = 9),
     legend.position = "top",
     plot.title = element_text(size=12, colour = "black")) +
-guides(fill = guide_legend(nrow = 1, byrow = TRUE, reverse = TRUE)) +
-  ggtitle("Gender and consumption")
+guides(fill = guide_legend(nrow = 1, byrow = TRUE, reverse = TRUE)) 
+ # ggtitle("Gender and consumption")
   
-figure_B
+figure_3B
 ```
 
 ```{r}
@@ -2257,11 +2176,9 @@ labels <- c(
   eight = "<img src='urine_1.jpg'
   width='35' height = '25' /><br>"
   )
-```
 
-## Fig. 2A
-```{r}
-figure_A <- ggplot(
+# Fig. 3A
+figure_3A <- ggplot(
   data = subset(clean_data_wide, gender %in% c("male", "female")),
   aes(x = urine_color_r_fac, 
       y = ..count..,
@@ -2277,7 +2194,8 @@ figure_A <- ggplot(
   guides(
     fill = guide_legend(order = 2, title = "Hydration",
                         override.aes = list(pattern = "none")),  # <--- no pattern here
-    pattern = guide_legend(order = 1, title = "Gender",
+    pattern = guide_legend(
+      order = 1, title = "Gender",
                            override.aes = list(
                              fill = c("white"),         # neutral bg
                              pattern = c("circle","none"),
@@ -2302,31 +2220,9 @@ figure_A <- ggplot(
         axis.title.x = element_text(size=12, colour = "black", face = "bold"),
         axis.title.y = element_text(size=12, colour = "black", face = "bold"),
         legend.position = "top", 
-        plot.title = element_text(size=12, colour = "black")) + 
-  ggtitle('Gender and hydration status')
-figure_A
-
-# # alternative version
-# figure_A_alt <- ggplot(
-#   data = subset(clean_data_wide, gender %in% c("male", "female")),
-#   aes(x = urine_color_r_fac, 
-#       fill = urine_color_split)) +
-#   geom_bar(position = "stack", color = "black", alpha = 0.8) +
-#   scale_fill_manual(values = pal[c(1,3)]) +
-#   labs(x = "Urine Colour", y = "Frequency", fill = "Hydration") +
-#   scale_x_discrete(labels = labels) +
-#   facet_wrap(~ gender, ncol = 1) +
-#   theme_minimal() +
-#   theme(axis.text.x = ggtext::element_markdown(),
-#         panel.grid.major = element_blank(),
-#         panel.grid.minor = element_blank(),
-#         axis.title.x = element_text(size = 12, face = "bold"),
-#         axis.title.y = element_text(size = 12, face = "bold"),
-#         legend.position = "top", 
-#         legend.title = element_blank(),
-#         plot.title = element_text(size=12, colour = "black")) + 
-#   ggtitle('Gender and hydration status')
-# figure_A_alt
+        plot.title = element_text(size=12, colour = "black")) 
+  #ggtitle('Gender and hydration status')
+figure_3A
 ```
 
 ```{r}
@@ -2435,49 +2331,12 @@ clean_data_wide %>%
 # those who are more confident about color are also more about frequency --> compute average
 cor.test(clean_data_wide$color_confidence_1, clean_data_wide$void_confidence_1, na.rm = TRUE)
 
-data_hydration <- clean_data_wide %>% 
-  select(pp, urine_color_r, void_frequency, color_confidence_1, void_confidence_1) %>% 
-  mutate(confidence = (color_confidence_1+void_confidence_1)/2)
-
-# Here we plot urine color and void frequency, showing in green those who have both adequate urine color and void frequency, and in red those who are inadequate in both. Seeing from the many points outside these areas, it seems that these measures are not very discriminatory. 
-
-hydration_plot <- ggplot(data_hydration, (aes(x = urine_color_r, 
-                            y = void_frequency, color = confidence))) +
-  geom_jitter(size = 1, width = 0.3, height = 0.3) + 
-  stat_smooth(method = "lm", color = "black", fullrange = TRUE, se = FALSE) +
-  #geom_hline(yintercept = 5) + 
-  geom_hline(yintercept = 7) + 
-  geom_vline(xintercept = 6) + 
-  annotate("rect", xmin = 6, xmax = 9, ymin = 7, ymax = 14, color = NA, fill = "green", alpha = 0.1) + 
-  annotate("rect", xmin = 0, xmax = 6, ymin = 0, ymax = 7, color = NA, fill = "red", alpha = 0.1) + 
-  scale_x_continuous(breaks = c(0, 2, 4, 6, 8))
-
-ggsave(hydration_plot, file= "hydration_plot.png", width = 10, height = 8)
-
 data_bubble <- clean_data_wide %>% 
   select(pp, urine_color_split, void_frequency_split, color_confidence_1, void_confidence_1) %>% 
   mutate(confidence = (color_confidence_1+void_confidence_1)/2) 
-
-#library(Rmisc)
-#library(plyr)
-bubble_means <- summarySE(data_bubble, measurevar="confidence", groupvars=c("void_frequency_split", "urine_color_split"), na.rm = TRUE)
-#detach("package:Rmisc")
-#detach("package:plyr")
-
-bubble_means <- bubble_means %>% 
-  filter(void_frequency_split %ni% NA_real_) %>% 
-  mutate(confidence = as.numeric(confidence))
-
-# more than 30% of pp have inconsistent classifications, confidence ratings do not seem to be related
-
-ggplot(subset(bubble_means), aes(x=urine_color_split, y=void_frequency_split, size = N, color = confidence, 
-                                 label = paste0(sprintf("%0.1f", round(N/sum(N)*100, digits = 1)), "%"))) + geom_point(aes(size = N, color = confidence), alpha=0.7) +  scale_color_gradient(limits = c(0, 100)) + 
-  geom_text(vjust = -1, color = "black",size = 4)
-
-# combination of both hydration measures (Adams et al., 2021)
 ```
 
-## Fig. 2D
+### Consumption and hydration status
 ```{r}
 pal <- drygatebrewer::drygate_palette("TakeMeTotheRiver")
 
@@ -2500,7 +2359,6 @@ long_data <- clean_data_wide %>%
   )
 
 summary_data <- long_data %>%
-  #mutate(amount_ml = amount_l * 1000) %>%   # L -> mL
   dplyr::group_by(drink_type, urine_color_split) %>%
   dplyr::summarise(
     n        = n(),
@@ -2519,7 +2377,7 @@ summary_data <- long_data %>%
   )
 
 # plot
-figure_2D <- ggplot(long_data,
+figure_3D <- ggplot(long_data,
                            aes(x = urine_color_split, y = amount_l, fill = urine_color_split)) +
   geom_flat_violin(
     position = position_nudge(x = .15, y = 0),
@@ -2553,7 +2411,6 @@ figure_2D <- ggplot(long_data,
     guide = "none"
   ) +
   facet_wrap(~drink_type, ncol = 2, scales = "fixed") +
-  #coord_flip() +
   labs(x = NULL, y = "Mean consumption (ml)", fill = "Hydration") +
   theme(
     panel.border   = element_rect(colour = "black", fill = NA, size = 1),
@@ -2568,28 +2425,14 @@ figure_2D <- ggplot(long_data,
     legend.title   = element_blank(),
     legend.text    = element_text(size = 12),
     legend.position = "top", strip.background = element_blank(),
-    #strip.text = element_text(size = 12, color = "black", face = "bold"),
-    plot.title = element_text(size=12, colour = "black")) + #guides(fill = "none") + 
-  ggtitle("Hydration status and water and sugar-sweetened beverages consumption")
+    plot.title = element_text(size=12, colour = "black")) 
 
-figure_2D
-
-#ggsave(figure_2D, file= "figure_2D.png", width = 12, height = 8)
+figure_3D
 ```
 
-## Stacked bar graph (intake per SES)
+## Intake per SES
 
 ```{r}
-# mean consumption per SES category
-ggplot(clean_data_wide,
-       aes(x = education_cat,
-           y = total_fluid_extra, 
-           fill = education_cat)) + 
-  geom_bar(stat = "summary") + 
-  theme(axis.text.x=element_blank())
-
-# it seems that low SES drink more in total looking at average consumption (amount_ml) per drink type because there are way less observations for low SES, e.g., 0 sd for drink "other", SDs are much larger for other observations (e.g., alcohol)
-
 clean_data$education_cat <- as.factor(clean_data$education_cat)
 
 # with wide format
@@ -2631,7 +2474,7 @@ pal <- pal[-c(6, 8, 10)] #remove white and in-between color
 palette_check(pal, plot = TRUE)
 
 # mean per drink type for the combined plot
-figure3B <- ggplot(total_means_ses,
+figure4B <- ggplot(total_means_ses,
                   aes(x = education_cat,
                       y = amount_ml,
                       fill = drink_type_name)) + 
@@ -2659,7 +2502,7 @@ figure3B <- ggplot(total_means_ses,
     legend.box = "horizontal",
     legend.direction = "horizontal") + ylab("Mean consumption (ml)") +
   guides(fill=guide_legend(nrow=1, byrow=TRUE, reverse = TRUE))
-figure3B
+figure4B
 ```
 
 ```{r}
@@ -2705,10 +2548,9 @@ figure5_extra <- ggplot(data = subset(total_means_ses_gender, gender %in% c("mal
   guides(fill=guide_legend(nrow=1,byrow=TRUE, reverse = TRUE)) +
   facet_grid(gender ~., scales = "free", space = "free", drop = TRUE)
 figure5_extra
-
-ggsave(figure5_extra, file= "figure5_extra.png", width = 12, height = 8)
 ```
-## Fig. 2C - Consumption per urine color
+
+### Consumption per urine color
 ```{r}
 clean_data_wide %>% 
   dplyr::group_by(urine_color_split) %>% 
@@ -2747,7 +2589,7 @@ means_urine <- means_urine %>%
                                       "total_hot",
                                       "total_water")))
 
-figure_C <- ggplot(means_urine,
+figure_3C <- ggplot(means_urine,
                    aes(x = urine_color_split,
                        y = amount_ml,
                        fill = drink_type_name)) +
@@ -2779,13 +2621,12 @@ figure_C <- ggplot(means_urine,
     legend.title = element_blank(),
     legend.text = element_text(size = 9),
     legend.position = "none",
-    plot.title = element_text(size=12, colour = "black")) + 
-  #guides(fill = "none") + 
-  ggtitle("Hydration and consumption")
-figure_C
+    plot.title = element_text(size=12, colour = "black")) 
+
+figure_3C
 ```
 
-## Consumption per void frequency
+### Consumption per void frequency
 
 ```{r}
 # with wide format
@@ -2829,40 +2670,21 @@ ggplot(means_void,
 #labs(title = "Beverage intake per gender and drink type (mean ml)", #subtitle = "Average consumption (ml)") 
 ```
 
-## Fig.2 combined
+## Fig.3 manuscript
 ```{r}
-right_stack <- (figure_B / figure_C)
+right_stack <- (figure_3B / figure_3C)
 
-# top row: figure_A (left) + right_stack (right)
-top_row <- figure_A + right_stack + 
+# top row: figure_3A (left) + right_stack (right)
+top_row <- figure_3A + right_stack + 
   plot_layout(ncol = 2, widths = c(1, 1.5))
 
-# final combined: top row above figure_D (figure_D spans both columns)
-combined <- top_row / figure_2D +
+# final combined: top row above figure_3D (figure_3D spans both columns)
+combined <- top_row / figure_3D +
   plot_layout(heights = c(1, 1)) +   # tweak heights as desired
-  plot_annotation(tag_levels = "A") + theme(legend.position = "top")
+  plot_annotation(tag_levels = "a") + theme(legend.position = "top")
 
 combined
-ggsave("figure_ABC_combined.png", combined, width = 12, height = 10, dpi = 300, device = ragg::agg_png)
-```
-
-## Fig.2 combined (alternative)
-```{r, include = FALSE, eval = FALSE}
-right_stack <- (figure_B / figure_C) +
-  plot_layout(guides = "collect") +
-  theme(legend.position = "top")
-
-# top row: figure_A (left) + right_stack (right)
-top_row <- figure_A_alt + right_stack +
-  plot_layout(ncol = 2, widths = c(1, 1.5))
-
-# final combined: top row above figure_D (figure_D spans both columns)
-combined <- top_row / figure_2D +
-  plot_layout(heights = c(1, 1)) +   # tweak heights as desired
-  plot_annotation(tag_levels = "A") + theme(legend.position = "top")
-
-combined
-ggsave("figure_ABC_combined_alt.png", combined, width = 12, height = 10, dpi = 300, device = ragg::agg_png)
+ggsave("figure_ABCD_combined.png", combined, width = 12, height = 10, dpi = 300, device = ragg::agg_png)
 ```
 
 # Hypothesis 1: Water intake will be positively associated with hydration status (lighter urine colour)
@@ -3072,11 +2894,6 @@ exp(confint(hyp1_4))
 
 # collinearity
 check_collinearity(hyp1_4)
-
-# the more sugar people consume, the less water they drink and the less hydrated they are
-cor.test(clean_data_wide$total_sugar, clean_data_wide$total_water_cent)
-
-cor.test(clean_data_wide$total_sugar, clean_data_wide$urine_color_r)
 ```
 
 # Hypothesis 2: SSB intake will be negatively associated with hydration status (lighter urine colour). 
@@ -3339,13 +3156,13 @@ exp(confint(hyp3_1))
 check_collinearity(hyp3_1)
 ```
 
-## Fig. 3
+## Fig. 4
 ```{r}
 # per adequate vs. inadequate
 pct_ses <- clean_data_wide %>%
-  filter(!is.na(education_split) & !is.na(urine_color_split)) %>%
-  group_by(education_split) %>%
-  summarise(
+  dplyr::filter(!is.na(education_split) & !is.na(urine_color_split)) %>%
+  dplyr::group_by(education_split) %>%
+  dplyr::summarise(
     n = n(),
     n_adequate = sum(urine_color_split == "adequate", na.rm = TRUE)
   ) %>%
@@ -3355,19 +3172,19 @@ pct_ses <- clean_data_wide %>%
   )
 
 prop_long <- clean_data_wide %>%
-  filter(!is.na(education_split) & !is.na(urine_color_split)) %>%
-  group_by(education_split, urine_color_split) %>%
-  summarise(n = n(), .groups = "drop") %>%
-  group_by(education_split) %>%
-  mutate(p = n / sum(n)) %>%
-  ungroup() %>% 
-  mutate(urine_color_split = factor(urine_color_split,
+  dplyr::filter(!is.na(education_split) & !is.na(urine_color_split)) %>%
+  dplyr::group_by(education_split, urine_color_split) %>%
+  dplyr::summarise(n = n(), .groups = "drop") %>%
+  dplyr::group_by(education_split) %>%
+  dplyr::mutate(p = n / sum(n)) %>%
+  dplyr::ungroup() %>% 
+  dplyr::mutate(urine_color_split = factor(urine_color_split,
                                     levels = c("inadequate", "adequate"))) 
 
 # select colors
 pal <- drygatebrewer::drygate_palette("TakeMeTotheRiver")
 
-figure3A_split <- ggplot(prop_long, aes(x = education_split, y = p, fill = urine_color_split)) +
+figure4A_split <- ggplot(prop_long, aes(x = education_split, y = p, fill = urine_color_split)) +
   geom_col(position = "stack", alpha = 1) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   scale_fill_manual(
@@ -3398,7 +3215,7 @@ figure3A_split <- ggplot(prop_long, aes(x = education_split, y = p, fill = urine
     plot.title = element_text(size=12, colour = "black", hjust = 0))
 #+ ggtitle("Education and hydration status")
 
-figure3A_split
+figure4A_split
 
 pal <- drygate_palette(10, name = "TakeMeTotheRiver", type = "continuous")
 pal <- pal[-c(6, 8, 10)] #remove white and in-between color
@@ -3435,7 +3252,7 @@ total_means_ses_split <- total_means_ses_split %>%
                                       "total_water")))
 
 # mean per drink type
-figure3B_split <- ggplot(total_means_ses_split,
+figure4B_split <- ggplot(total_means_ses_split,
                   aes(x = education_split,
                       y = amount_ml,
                       fill = drink_type_name)) + 
@@ -3466,14 +3283,13 @@ figure3B_split <- ggplot(total_means_ses_split,
     plot.title = element_text(size=12, colour = "black")) + 
   ylab("Mean consumption (ml)") + 
   guides(fill=guide_legend(nrow=1, byrow=TRUE, reverse = TRUE)) 
-#+ ggtitle("Education and consumption")
-figure3B_split
+figure4B_split
 
 # PER EDUCATION LEVEL
 pct_ses <- clean_data_wide %>%
   filter(!is.na(education_cat) & !is.na(urine_color_split)) %>%
   group_by(education_cat) %>%
-  summarise(
+  dplyr::summarise(
     n = n(),
     n_adequate = sum(urine_color_split == "adequate", na.rm = TRUE)
   ) %>%
@@ -3488,7 +3304,7 @@ pct_ses <- pct_ses %>%
 prop_long <- clean_data_wide %>%
   filter(!is.na(education_cat) & !is.na(urine_color_split)) %>%
   group_by(education_cat, urine_color_split) %>%
-  summarise(n = n(), .groups = "drop") %>%
+  dplyr::summarise(n = n(), .groups = "drop") %>%
   group_by(education_cat) %>%
   mutate(p = n / sum(n)) %>%
   ungroup() %>% 
@@ -3498,7 +3314,7 @@ prop_long <- clean_data_wide %>%
 # select colors
 pal <- drygatebrewer::drygate_palette("TakeMeTotheRiver")
 
-figure3A <- ggplot(prop_long, aes(x = education_cat, y = p, fill = urine_color_split)) +
+figure4A <- ggplot(prop_long, aes(x = education_cat, y = p, fill = urine_color_split)) +
   geom_col(position = "stack", alpha = 1) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   scale_fill_manual(
@@ -3527,12 +3343,12 @@ figure3A <- ggplot(prop_long, aes(x = education_cat, y = p, fill = urine_color_s
     plot.title = element_text(size=12, colour = "black", hjust = 0))
 #+ ggtitle("Education and hydration status")
 
-figure3A
+figure4A
 
-combined_ses <- figure3A + figure3B + plot_layout(ncol = 2, widths = c(0.8, 1.2)) + plot_annotation(tag_levels = "A")
+combined_ses <- figure4A + figure4B + plot_layout(ncol = 2, widths = c(0.8, 1.2)) + plot_annotation(tag_levels = "a")
 #combined_ses
 
-ggsave("figure_3_combined.png", combined_ses, width = 16, height = 9, dpi = 300, device = ragg::agg_png)
+ggsave("figure_4_combined.png", combined_ses, width = 16, height = 9, dpi = 300, device = ragg::agg_png)
 ```
 
 # Exploratory analyses
@@ -4032,6 +3848,120 @@ merged_open <- merge(clean_data_wide, open_coded, by = "response_id", all.x = TR
 
 merged_open <- merged_open %>% 
   select(response_id, education_cat, education_split, urine_color_split, color_drink_coded_1, color_drink_coded_2, color_drink_coded_3, color_health_coded_1, color_health_coded_2, color_health_coded_3, Color_own_coded_1, Color_own_coded_2, Color_own_coded_3)
+
+merged_open_clean <- merged_open
+
+# cleanq1
+for (col in grep("^color_drink_coded", names(merged_open_clean), value = TRUE)) {
+  merged_open_clean[[col]] <- case_when(
+    tolower(merged_open_clean[[col]]) %in% c("ν/α", "n/a", "n/a", "n/a") ~ "N/A",
+    merged_open_clean[[col]] == "Ν/Α" ~ "N/A",
+    TRUE ~ merged_open_clean[[col]]
+  )
+}
+
+# cleanq2
+for (col in grep("^color_health_coded", names(merged_open_clean), value = TRUE)) {
+  merged_open_clean[[col]] <- case_when(
+    tolower(merged_open_clean[[col]]) %in% c("ν/α", "n/a", "n/a", "n/a") ~ "N/A",
+    merged_open_clean[[col]] == "Ν/Α" ~ "N/A",
+    TRUE ~ merged_open_clean[[col]]
+  )
+}
+
+# clean q3
+for (col in grep("^Color_own_coded", names(merged_open_clean), value = TRUE)) {
+  merged_open_clean[[col]] <- case_when(
+    tolower(merged_open_clean[[col]]) %in% c("ν/α", "n/a", "n/a") ~ "N/A",
+    merged_open_clean[[col]] == "Ν/Α" ~ "N/A",
+    merged_open_clean[[col]] == "ας" ~ "N/A", 
+    TRUE ~ merged_open_clean[[col]]
+  )
+}
+```
+
+```{r}
+# question 1 urine colour and drinking
+participant_q1 <- merged_open_clean %>%
+  select(response_id, 
+         color_drink_coded_1, color_drink_coded_2, color_drink_coded_3) %>%
+  mutate(
+    mentions_amount = ifelse(
+      (!is.na(color_drink_coded_1) & color_drink_coded_1 == "amount") |
+        (!is.na(color_drink_coded_2) & color_drink_coded_2 == "amount") |
+        (!is.na(color_drink_coded_3) & color_drink_coded_3 == "amount"), 1, 0),
+    
+    mentions_hydration = ifelse(
+      (!is.na(color_drink_coded_1) & color_drink_coded_1 == "hydration") |
+        (!is.na(color_drink_coded_2) & color_drink_coded_2 == "hydration") |
+        (!is.na(color_drink_coded_3) & color_drink_coded_3 == "hydration"), 1, 0)
+  )
+
+urine_color_association <- participant_q1 %>%
+  dplyr::summarise(
+    total_participants = n(),
+    n_amount_only = sum(mentions_amount == 1 & mentions_hydration == 0, na.rm = TRUE),
+    n_hydration_only = sum(mentions_amount == 0 & mentions_hydration == 1, na.rm = TRUE),
+    n_both = sum(mentions_amount == 1 & mentions_hydration == 1, na.rm = TRUE),
+    n_neither = sum(mentions_amount == 0 & mentions_hydration == 0, na.rm = TRUE)
+  ) %>%
+  mutate(
+    pct_amount_only = round(n_amount_only / total_participants * 100, 1),
+    pct_hydration_only = round(n_hydration_only / total_participants * 100, 1),
+    pct_both = round(n_both / total_participants * 100, 1),
+    pct_neither = round(n_neither / total_participants * 100, 1),
+    pct_either_amount_hydration = round((n_amount_only + n_hydration_only + n_both) / total_participants * 100, 1)
+  )
+
+urine_color_association
+
+# question 3 urine colour and drinking behaviour 
+q3_responses <- merged_open_clean %>%
+  dplyr::select(response_id, 
+         Color_own_coded_1, Color_own_coded_2, Color_own_coded_3) %>%
+  pivot_longer(cols = starts_with("Color_own_coded")) %>% 
+  dplyr::filter(!is.na(value) & value != "") %>%
+  distinct(response_id, value) %>%
+  dplyr::count(value) %>%
+  mutate(
+    total_participants = n_distinct(merged_open_clean$response_id),
+    percentage = round(n / total_participants * 100, 1)
+  ) %>%
+  arrange(desc(n))
+
+q3_responses
+
+# per hydration status
+participant_responses <- merged_open_clean %>%
+  select(response_id, urine_color_split,
+         color_drink_coded_1, color_drink_coded_2, color_drink_coded_3,
+         Color_own_coded_1, Color_own_coded_2, Color_own_coded_3) %>%
+  mutate(
+    q1_mentions_amount_hydration = ifelse(
+      (!is.na(color_drink_coded_1) & color_drink_coded_1 %in% c("amount", "hydration")) |
+        (!is.na(color_drink_coded_2) & color_drink_coded_2 %in% c("amount", "hydration")) |
+        (!is.na(color_drink_coded_3) & color_drink_coded_3 %in% c("amount", "hydration")),
+      "Yes", "No"),
+    
+    q3_drink_more = ifelse(
+      (!is.na(Color_own_coded_1) & Color_own_coded_1 == "drink_more") | 
+        (!is.na(Color_own_coded_2) & Color_own_coded_2 == "drink_more") | 
+        (!is.na(Color_own_coded_3) & Color_own_coded_3 == "drink_more"), 
+      1, 0),
+    
+    hydration_status = urine_color_split
+  )
+
+hydration_knowledge_behavior <- participant_responses %>%
+  filter(q1_mentions_amount_hydration == "Yes") %>%
+  group_by(hydration_status) %>%
+  dplyr::summarise(
+    n_total = n(),
+    n_drink_more = sum(q3_drink_more == 1, na.rm = TRUE),
+    pct_drink_more = round(n_drink_more / n_total * 100, 1)
+  )
+
+hydration_knowledge_behavior
 ```
 
 # Additional analyses
@@ -4041,7 +3971,7 @@ merged_open <- merged_open %>%
 # percentage hydrated for low vs. high education
 clean_data_wide %>%
   group_by(education_split) %>%
-  summarise(
+  dplyr::summarise(
     n = n(),
     n_adequate = sum(urine_color_split == "adequate", na.rm = TRUE),
     pct_adequate = n_adequate / n * 100
@@ -4050,7 +3980,7 @@ clean_data_wide %>%
 clean_data_wide %>%
   filter(income_split %in% c("low (<40.000£)","high (>40.000£)")) %>%
   group_by(income_split) %>%
-  summarise(
+  dplyr::summarise(
     n = n(),
     n_adequate = sum(urine_color_split == "adequate", na.rm = TRUE),
     pct_adequate = n_adequate / n * 100
@@ -4833,6 +4763,26 @@ confint(hyp2_1)
 ```
 
 
+### Checking hot drinks
+```{r}
+clean_data_wide$total_hot_cent <- scale(clean_data_wide$total_hot,center = TRUE, scale = TRUE)
+  
+hyp1_1_alone <- glm(urine_color_split ~ total_hot_cent, data = clean_data_wide, family = "binomial")
+summary(hyp1_1_alone)
+exp(coef(hyp1_1_alone))
+
+hyp1_1_hot <- glm(urine_color_split ~ total_water_cent + total_hot_cent, data = clean_data_wide, family = "binomial")
+summary(hyp1_1_hot)
+exp(coef(hyp1_1_hot))
+
+hyp2_1_hot <- glm(urine_color_split ~ total_ssb_cent + total_hot_cent, data = clean_data_wide, family = "binomial")
+summary(hyp2_1_hot)
+exp(coef(hyp2_1_hot))
+
+cor.test(clean_data_wide$total_hot_cent, clean_data_wide$total_water_cent)
+
+cor.test(clean_data_wide$total_hot_cent, clean_data_wide$total_sugar)
+```
 ```{r}
 knitr::knit_exit()
 ```
